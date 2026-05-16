@@ -629,6 +629,79 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; font-weight: 500; }
 /* old: .partner-logo.plus, .partner-name, .partner-name em, .partner-name.muted — rules above supersede */
 /* old .partner-meta legacy rule retained — partner cards now use .partner-highlight + .partner-bio */
 
+/* ADMINISTRADORAS (CONSÓRCIOS) */
+.admins-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--line-light-2);
+  border: 1px solid var(--line-light-2);
+}
+.admin-card {
+  background: var(--c-cream);
+  padding: 40px 36px 44px;
+  display: flex; flex-direction: column;
+  transition: background 0.25s ease;
+}
+.s-light-2 .admin-card { background: var(--c-cream-2); }
+.admin-card:hover { background: var(--c-cream); }
+.admin-logo {
+  position: relative;
+  width: 100%; height: 120px;
+  background: #fff;
+  border: 1px solid var(--line-light-2);
+  display: flex; align-items: center; justify-content: center;
+  padding: 22px 28px;
+  margin-bottom: 32px;
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+.admin-card:hover .admin-logo { border-color: rgba(113, 63, 42, 0.25); }
+.admin-logo img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  display: block;
+}
+.admin-logo .admin-logo-fallback {
+  display: none;
+  font-family: var(--f-serif);
+  font-size: 26px; font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--c-primary);
+  text-align: center;
+}
+.admin-logo.no-image img { display: none; }
+.admin-logo.no-image .admin-logo-fallback { display: block; }
+.admin-num {
+  font-family: var(--f-mono); font-size: 11px;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--c-gold-deep);
+  margin-bottom: 16px;
+}
+.admin-headline {
+  font-family: var(--f-serif); font-size: 28px; font-weight: 300;
+  letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 14px;
+  color: var(--c-text-light);
+}
+.admin-headline em { font-style: normal; font-weight: 500; color: var(--c-primary); }
+.admin-body {
+  font-size: 13.5px; line-height: 1.75;
+  color: var(--c-text-muted-light); font-weight: 300;
+  margin-bottom: 24px;
+}
+.admin-tags {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-light);
+  font-family: var(--f-mono); font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--c-primary);
+}
+.admin-actions {
+  margin-top: 48px;
+  display: flex; gap: 32px; flex-wrap: wrap; align-items: center;
+}
+
 /* PROJEÇÃO 2026 */
 .proj-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 56px; }
 .proj-box { padding: 40px 32px; position: relative; }
@@ -835,7 +908,7 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; font-weight: 500; }
   .nav-menu { display: none; }
   .hero, .page-hero { grid-template-columns: 1fr; padding: 80px 20px 60px; }
   .hero-card { display: none; }
-  .grid-2, .grid-3, .grid-4, .news-grid, .partners-grid, .proj-compare, .eco-grid, .team-grid, .synthesis-grid, .product-feature {
+  .grid-2, .grid-3, .grid-4, .news-grid, .partners-grid, .admins-grid, .proj-compare, .eco-grid, .team-grid, .synthesis-grid, .product-feature {
     grid-template-columns: 1fr;
   }
   .product-feature .pf-num { font-size: 64px; }
