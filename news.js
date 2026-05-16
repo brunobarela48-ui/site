@@ -20,7 +20,7 @@
 */
 
 (function () {
-  const SHEET_CSV_URL = '';                  // ← preencher após publicar a planilha
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQnAdwFOZP2Fg2vylWd9e31DfjyACah7SDc8VPMG24rk_8uGzaY6lOO0ZYrPDkrmyzdQ1IL3nhst5gh/pub?output=csv';
   const REFRESH_MS = 0;                      // 0 = sem auto-refresh; ex.: 5*60*1000 para 5 min
 
   const $featured = document.getElementById('news-featured');
@@ -55,9 +55,15 @@
     return rows;
   }
 
+  // Normaliza cabeçalhos: minúsculas + remove acentos
+  // ("Título" → "titulo", "Câmbio" → "cambio", "Tag" → "tag")
+  function norm(h) {
+    return (h || '').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
   function rowsToObjects(rows) {
     if (!rows.length) return [];
-    const headers = rows[0].map(h => h.trim().toLowerCase());
+    const headers = rows[0].map(norm);
     return rows.slice(1)
       .filter(r => r.some(c => c && c.trim()))
       .map(r => {
@@ -176,11 +182,15 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
       const rows = parseCSV(text);
-      const items = rowsToObjects(rows)
-        .filter(i => isYes(i.publicar))
+      const all = rowsToObjects(rows);
+      // Se a coluna "publicar" não existe, todas as linhas aparecem
+      // (a planilha em si vira a lista curada). Quando o usuário
+      // adiciona a coluna, ela passa a filtrar pelas linhas com SIM.
+      const hasPublicar = all.length > 0 && 'publicar' in all[0];
+      state.items = all
+        .filter(i => (hasPublicar ? isYes(i.publicar) : true))
         .filter(i => i.titulo && i.link)
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-      state.items = items;
       bindFilters();
       render();
     } catch (e) {
