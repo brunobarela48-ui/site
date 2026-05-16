@@ -219,8 +219,11 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; font-weight: 500; }
   text-decoration: none; padding-bottom: 3px;
   border-bottom: 1px solid var(--c-gold);
 }
+.link-arrow { color: var(--c-text-dark); }
 .s-light .link-arrow, .s-light-2 .link-arrow { color: var(--c-primary); }
-.s-dark .link-arrow, .s-deep .link-arrow { color: var(--c-text-dark); }
+.s-dark .link-arrow, .s-deep .link-arrow,
+.hero .link-arrow, .page-hero .link-arrow { color: var(--c-text-dark); }
+.link-arrow:visited, .link-arrow:active { color: inherit; }
 
 /* KPIs */
 .kpi-strip {
