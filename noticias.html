@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notícias & Inteligência de Mercado — Áxicon Soluções Financeiras</title>
+<meta name="description" content="Curadoria diária do que impacta crédito estruturado, câmbio e mercado de capitais. Macro, regulatório, agro, cross-border.">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Página de notícias — extensões locais */
+.news-page-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 28px; }
+.news-page-grid .news-card.large h3 { font-size: 22px; }
+.news-page-grid .news-card.small h3 { font-size: 17px; }
+
+.news-filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 56px; padding-top: 4px;
+  border-top: 1px solid var(--line-light-2);
+  padding-top: 32px;
+}
+.news-filter {
+  font-family: var(--f-mono); font-size: 9px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 9px 14px;
+  border: 1px solid rgba(42, 24, 16, 0.18);
+  color: rgba(42, 24, 16, 0.7);
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.news-filter:hover, .news-filter.active {
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+  background: rgba(124, 77, 51, 0.04);
+}
+.news-filter.active { border-color: var(--c-primary); background: var(--c-primary); color: var(--c-cream); }
+
+/* Featured story (hero-style) */
+.featured-story {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;
+  border: 1px solid var(--line-light-2);
+  margin-bottom: 72px;
+  background: var(--c-cream);
+  text-decoration: none; color: inherit;
+}
+.featured-story:hover .featured-story-img { transform: scale(1.02); }
+.featured-story-img-wrap {
+  position: relative; overflow: hidden;
+  min-height: 380px;
+}
+.featured-story-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: grayscale(0.15) brightness(0.92);
+  transition: transform 0.7s;
+}
+.featured-story-badges {
+  position: absolute; top: 18px; left: 18px;
+  display: flex; gap: 6px;
+  font-family: var(--f-mono);
+}
+.featured-story-content {
+  padding: 56px 48px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+.featured-story-meta {
+  font-family: var(--f-mono); font-size: 10px;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--c-primary);
+  margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.featured-story-meta::before { content: ''; width: 26px; height: 1px; background: var(--c-gold); }
+.featured-story h2 {
+  font-size: clamp(28px, 3.2vw, 36px);
+  line-height: 1.12; margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.featured-story h2 em { color: var(--c-primary); font-weight: 500; font-style: normal; }
+.featured-story p {
+  font-size: 14.5px; line-height: 1.75;
+  color: var(--c-text-muted-light);
+  margin-bottom: 32px;
+  max-width: 460px;
+}
+.featured-story-foot {
+  font-family: var(--f-mono); font-size: 9px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--c-primary);
+  border-top: 1px solid var(--line-light-2);
+  padding-top: 20px;
+  display: flex; justify-content: space-between;
+}
+
+/* Load more button */
+.news-loadmore { margin-top: 56px; text-align: center; }
+.news-loadmore-btn {
+  font-family: var(--f-mono); font-size: 10px;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--c-primary);
+  background: transparent;
+  border: 1px solid var(--c-primary);
+  padding: 14px 32px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.news-loadmore-btn:hover { background: var(--c-primary); color: var(--c-cream); }
+
+/* Newsletter stripe */
+.newsletter {
+  background: var(--c-bg-dark);
+  color: var(--c-text-dark);
+  padding: 88px 32px;
+  border-top: 1px solid rgba(204, 166, 127, 0.18);
+  border-bottom: 1px solid rgba(204, 166, 127, 0.18);
+}
+.newsletter-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 64px; align-items: center;
+}
+.newsletter-grid h3 {
+  font-size: clamp(26px, 2.8vw, 32px);
+  font-weight: 300; letter-spacing: -0.015em;
+  margin-bottom: 16px;
+}
+.newsletter-grid h3 em { color: var(--c-gold); font-style: normal; font-weight: 500; }
+.newsletter-grid p {
+  font-size: 13.5px; line-height: 1.75;
+  color: rgba(245, 244, 240, 0.7);
+  max-width: 440px;
+}
+.newsletter-form {
+  display: flex; gap: 0;
+  border: 1px solid var(--c-gold);
+  background: rgba(204, 166, 127, 0.05);
+}
+.newsletter-form input {
+  flex: 1; background: transparent; border: none;
+  padding: 16px 20px;
+  font-family: var(--f-sans); font-size: 13px;
+  color: var(--c-text-dark);
+  outline: none;
+}
+.newsletter-form input::placeholder { color: rgba(245, 244, 240, 0.45); }
+.newsletter-form button {
+  background: var(--c-gold); color: var(--c-deep);
+  border: none; padding: 0 24px;
+  font-family: var(--f-sans); font-size: 9px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.newsletter-form button:hover { background: var(--c-gold-soft); }
+.newsletter-disclaimer {
+  font-family: var(--f-mono); font-size: 8.5px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(204, 166, 127, 0.55);
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .news-page-grid { grid-template-columns: 1fr; }
+  .featured-story { grid-template-columns: 1fr; }
+  .featured-story-content { padding: 36px 28px; }
+  .featured-story-img-wrap { min-height: 240px; }
+  .newsletter-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+<!-- TICKER -->
+<div class="market-ticker">
+  <div class="ticker-track">
+    <span>
+      <span><span class="ticker-label">USD/BRL</span><span id="t-usd">—</span></span>
+      <span><span class="ticker-label">EUR/BRL</span><span id="t-eur">—</span></span>
+      <span><span class="ticker-label">GBP/BRL</span><span id="t-gbp">—</span></span>
+      <span><span class="ticker-label">BTC/USD</span><span id="t-btc">—</span></span>
+      <span><span class="ticker-label">JPY/BRL</span><span id="t-jpy">—</span></span>
+      <span><span class="ticker-label">CHF/BRL</span><span id="t-chf">—</span></span>
+      <span><span class="ticker-label">CAD/BRL</span><span id="t-cad">—</span></span>
+      <span><span class="ticker-label">AUD/BRL</span><span id="t-aud">—</span></span>
+    </span>
+    <span aria-hidden="true">
+      <span><span class="ticker-label">USD/BRL</span><span class="t-usd2">—</span></span>
+      <span><span class="ticker-label">EUR/BRL</span><span class="t-eur2">—</span></span>
+      <span><span class="ticker-label">GBP/BRL</span><span class="t-gbp2">—</span></span>
+      <span><span class="ticker-label">BTC/USD</span><span class="t-btc2">—</span></span>
+      <span><span class="ticker-label">JPY/BRL</span><span class="t-jpy2">—</span></span>
+      <span><span class="ticker-label">CHF/BRL</span><span class="t-chf2">—</span></span>
+      <span><span class="ticker-label">CAD/BRL</span><span class="t-cad2">—</span></span>
+      <span><span class="ticker-label">AUD/BRL</span><span class="t-aud2">—</span></span>
+    </span>
+  </div>
+</div>
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <img src="assets/logo-full-black.svg" alt="Áxicon Soluções Financeiras" class="brand-logo">
+  </a>
+  <div class="nav-menu">
+    <a href="index.html">Home</a>
+    <a href="institucional.html">Institucional</a>
+    <a href="produtos.html">Produtos</a>
+    <a href="cases.html">Cases</a>
+    <a href="consorcios.html">Consórcios</a>
+    <a href="noticias.html" class="active">Notícias</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <span data-lang="pt">PT</span><span class="sep">·</span><span data-lang="en" class="inactive">EN</span>
+    </div>
+    <a href="https://wa.me/5544991147236?text=Olá,%20tudo%20bem?%20Vim%20pelo%20site%20da%20Áxicon..." class="nav-cta" target="_blank" rel="noopener">Fale conosco</a>
+  </div>
+</nav>
+
+<header class="page-hero has-image page-hero-bg-1">
+  <div>
+    <div class="page-hero-eyebrow">Inteligência de mercado · diário</div>
+    <h1 class="h-hero">Notícias que <em>movem<br>o capital.</em></h1>
+    <p class="page-hero-lede">Curadoria diária do que impacta crédito estruturado, câmbio, regulatório e mercado de capitais. Atualização em tempo real, sem ruído — o que de fato precifica risco e oportunidade.</p>
+  </div>
+  <div class="page-hero-meta">
+    Edição diária · MMXXVI
+    <div class="page-hero-meta-row">
+      <span><strong>Diário</strong>Atualização</span>
+      <span><strong>07</strong>Categorias</span>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="container"><a href="index.html">Home</a><span class="sep">/</span><span>Notícias</span></div></div>
+
+<!-- FEATURED + GRID -->
+<section class="section s-light">
+  <div class="container">
+    <div class="section-label">Em destaque · hoje</div>
+
+    <a href="#" class="featured-story">
+      <div class="featured-story-img-wrap">
+        <div class="featured-story-img" style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=85');"></div>
+        <div class="featured-story-badges">
+          <span class="news-badge news-badge-featured">Em destaque</span>
+          <span class="news-badge">Macro</span>
+        </div>
+      </div>
+      <div class="featured-story-content">
+        <div>
+          <div class="featured-story-meta">Hoje · 14h32 · Reuters</div>
+          <h2>Copom mantém Selic em <em>10,75%</em> pela quarta reunião consecutiva.</h2>
+          <p>Decisão unânime do colegiado reforça cautela com fiscal e expectativa de inflação. Curva de juros já precifica corte gradual a partir do segundo semestre, com reflexo direto em emissões de CRI/CRA e operações estruturadas indexadas a CDI+.</p>
+        </div>
+        <div class="featured-story-foot">
+          <span>Ler análise completa →</span>
+          <span>05 min de leitura</span>
+        </div>
+      </div>
+    </a>
+
+    <div class="news-filters">
+      <button class="news-filter active">Todas</button>
+      <button class="news-filter">Macro</button>
+      <button class="news-filter">Câmbio</button>
+      <button class="news-filter">Crédito</button>
+      <button class="news-filter">Mercado de Capitais</button>
+      <button class="news-filter">Agro</button>
+      <button class="news-filter">Cross-Border</button>
+      <button class="news-filter">Regulatório</button>
+    </div>
+
+    <div class="news-page-grid">
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Câmbio</span></div>
+        </div>
+        <div class="news-meta">Hoje · 11h17 · Bloomberg</div>
+        <h3>Dólar fecha em <em>queda</em> após dado de emprego nos EUA</h3>
+        <p>Payroll acima do esperado eleva apetite a risco em mercados emergentes. Real lidera ganhos no dia.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Crédito</span></div>
+        </div>
+        <div class="news-meta">Hoje · 09h45 · Valor</div>
+        <h3>Mercado de <em>CRI</em> bate recorde no primeiro trimestre</h3>
+        <p>Volume estruturado supera R$ 28 bi, com forte demanda de family offices e ALMs.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Agro</span></div>
+        </div>
+        <div class="news-meta">Ontem · 17h22 · Globo Rural</div>
+        <h3>Safra recorde puxa emissão de <em>CRA</em> em janeiro</h3>
+        <p>Operações vinculadas a soja e milho lideram o pipeline. Custeio safra atinge R$ 12 bi no mês.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Mercado de Capitais</span></div>
+        </div>
+        <div class="news-meta">Ontem · 15h08 · Anbima</div>
+        <h3><em>FIDC</em> ultrapassa R$ 500 bi em estoque</h3>
+        <p>Indústria de fundos de direitos creditórios cresce 14% no ano. Novas emissões aceleram em janeiro.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1604754742629-3e5728249d73?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Cross-Border</span></div>
+        </div>
+        <div class="news-meta">Ontem · 11h54 · Reuters</div>
+        <h3>Captação externa de <em>middle market</em> brasileiro cresce 32%</h3>
+        <p>Tickets entre USD 50 mi e USD 200 mi puxam ciclo. Hedge cambial estruturado vira commodity de mesa.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Regulatório</span></div>
+        </div>
+        <div class="news-meta">2 dias · 18h00 · CVM</div>
+        <h3>CVM publica nova resolução sobre <em>ofertas restritas</em></h3>
+        <p>Mudança simplifica documentação e amplia público-alvo qualificado. Securitizadoras celebram.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Crédito</span></div>
+        </div>
+        <div class="news-meta">2 dias · 14h33 · BC</div>
+        <h3>Home Equity cresce <em>28%</em> em 2025</h3>
+        <p>Volume originado supera R$ 18 bi. Liquidez sobre patrimônio imobiliário ganha tração entre PJs do interior.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Macro</span></div>
+        </div>
+        <div class="news-meta">3 dias · 10h12 · IBGE</div>
+        <h3>IPCA fica <em>abaixo</em> do piso da meta</h3>
+        <p>Inflação cede e abre espaço para reprecificação do CDI futuro. Curva de juros DI ajusta -25bps.</p>
+      </a>
+
+      <a href="#" class="news-card small">
+        <div class="news-img-wrap small">
+          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&q=85');"></div>
+          <div class="news-badges"><span class="news-badge">Mercado de Capitais</span></div>
+        </div>
+        <div class="news-meta">3 dias · 08h47 · B3</div>
+        <h3>B3 anuncia novo segmento para <em>ofertas estruturadas</em></h3>
+        <p>Plataforma para FIDCs, CRIs e CRAs com listagem ágil e padrão de disclosure simplificado para investidor qualificado.</p>
+      </a>
+
+    </div>
+
+    <div class="news-loadmore">
+      <button class="news-loadmore-btn">Carregar mais notícias →</button>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-grid">
+    <div>
+      <div class="section-label" style="color: var(--c-gold);">Newsletter · semanal</div>
+      <h3>Receba a <em>curadoria</em> Áxicon na sua caixa.</h3>
+      <p>Toda sexta, um boletim com o que efetivamente moveu crédito estruturado, câmbio e mercado de capitais na semana. Análise, não release.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent = 'Inscrito ✓';">
+      <input type="email" required placeholder="seu@email.com" aria-label="E-mail">
+      <button type="submit">Assinar →</button>
+    </form>
+  </div>
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="newsletter-disclaimer">Sem spam · cancelamento a qualquer momento</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-stripe">
+  <h3>Quer falar de uma operação específica? <em>Conversamos.</em></h3>
+  <div class="cta-stripe-actions">
+    <a href="https://wa.me/5544991147236?text=Olá,%20tudo%20bem?%20Vim%20pelo%20site%20da%20Áxicon..." target="_blank" rel="noopener" class="btn btn-primary">Falar com a mesa →</a>
+    <a href="produtos.html" class="link-arrow">Ver produtos</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="assets/logo-full-white.svg" alt="Áxicon Soluções Financeiras" class="brand-logo">
+      </div>
+      <p class="footer-tag"><em>"A inteligência financeira não deveria ter um endereço fixo."</em></p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="institucional.html">Institucional</a></li>
+        <li><a href="produtos.html">Produtos</a></li>
+        <li><a href="cases.html">Cases</a></li>
+        <li><a href="consorcios.html">Consórcios</a></li>
+        <li><a href="noticias.html">Notícias</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Sede</h4>
+      <p>Av. Gastão Vidiga, 1006<br>Maringá · PR · Brasil</p>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <p>
+        <a href="mailto:contato@axicon.com.br">contato@axicon.com.br</a><br>
+        <a href="https://wa.me/5544991147236">+55 (44) 99114-7236</a><br>
+        <a href="https://www.instagram.com/axicon.solucoes/" target="_blank">@axicon.solucoes</a>
+      </p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© MMXXVI · Áxicon Soluções Financeiras</span>
+    <span>Crédito estruturado · Brasil</span>
+  </div>
+</footer>
+<a href="https://wa.me/5544991147236?text=Olá,%20tudo%20bem?%20Vim%20pelo%20site%20da%20Áxicon..." class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+<script src="shared.js"></script>
+</body>
+</html>
