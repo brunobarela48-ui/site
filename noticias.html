@@ -96,20 +96,34 @@
   display: flex; justify-content: space-between;
 }
 
-/* Load more button */
-.news-loadmore { margin-top: 56px; text-align: center; }
-.news-loadmore-btn {
-  font-family: var(--f-mono); font-size: 10px;
-  letter-spacing: 0.28em; text-transform: uppercase;
+/* Card foot — "Ler na fonte →" */
+.news-card-foot {
+  margin-top: 14px;
+  font-family: var(--f-mono); font-size: 9px;
+  letter-spacing: 0.25em; text-transform: uppercase;
   color: var(--c-primary);
-  background: transparent;
-  border: 1px solid var(--c-primary);
-  padding: 14px 32px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-light-2);
 }
-.news-loadmore-btn:hover { background: var(--c-primary); color: var(--c-cream); }
+
+/* Estados (vazio, erro, configuração pendente) */
+.news-empty {
+  text-align: center;
+  font-size: 13.5px; line-height: 1.7;
+  color: var(--c-text-faint-light);
+  padding: 64px 24px;
+  border: 1px dashed var(--line-light-2);
+  background: var(--c-cream-2);
+  margin-top: 32px;
+}
+.news-empty p { margin: 0 0 8px; }
+.news-empty p:last-child { margin-bottom: 0; }
+.news-empty code {
+  font-family: var(--f-mono); font-size: 11px;
+  background: rgba(124, 77, 51, 0.08);
+  padding: 2px 6px; color: var(--c-primary);
+}
+.news-config-pending strong { color: var(--c-primary); font-weight: 500; }
 
 /* Newsletter stripe */
 .newsletter {
@@ -241,135 +255,21 @@
   <div class="container">
     <div class="section-label">Em destaque · hoje</div>
 
-    <a href="#" class="featured-story">
-      <div class="featured-story-img-wrap">
-        <div class="featured-story-img" style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=85');"></div>
-        <div class="featured-story-badges">
-          <span class="news-badge news-badge-featured">Em destaque</span>
-          <span class="news-badge">Macro</span>
-        </div>
-      </div>
-      <div class="featured-story-content">
-        <div>
-          <div class="featured-story-meta">Hoje · 14h32 · Reuters</div>
-          <h2>Copom mantém Selic em <em>10,75%</em> pela quarta reunião consecutiva.</h2>
-          <p>Decisão unânime do colegiado reforça cautela com fiscal e expectativa de inflação. Curva de juros já precifica corte gradual a partir do segundo semestre, com reflexo direto em emissões de CRI/CRA e operações estruturadas indexadas a CDI+.</p>
-        </div>
-        <div class="featured-story-foot">
-          <span>Ler análise completa →</span>
-          <span>05 min de leitura</span>
-        </div>
-      </div>
-    </a>
+    <div id="news-featured"></div>
 
-    <div class="news-filters">
-      <button class="news-filter active">Todas</button>
-      <button class="news-filter">Macro</button>
-      <button class="news-filter">Câmbio</button>
-      <button class="news-filter">Crédito</button>
-      <button class="news-filter">Mercado de Capitais</button>
-      <button class="news-filter">Agro</button>
-      <button class="news-filter">Cross-Border</button>
-      <button class="news-filter">Regulatório</button>
+    <div class="news-filters" id="news-filters">
+      <button class="news-filter active" data-filter="todas">Todas</button>
+      <button class="news-filter" data-filter="Macro">Macro</button>
+      <button class="news-filter" data-filter="Câmbio">Câmbio</button>
+      <button class="news-filter" data-filter="Crédito">Crédito</button>
+      <button class="news-filter" data-filter="Mercado de Capitais">Mercado de Capitais</button>
+      <button class="news-filter" data-filter="Agro">Agro</button>
+      <button class="news-filter" data-filter="Cross-Border">Cross-Border</button>
+      <button class="news-filter" data-filter="Regulatório">Regulatório</button>
     </div>
 
-    <div class="news-page-grid">
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Câmbio</span></div>
-        </div>
-        <div class="news-meta">Hoje · 11h17 · Bloomberg</div>
-        <h3>Dólar fecha em <em>queda</em> após dado de emprego nos EUA</h3>
-        <p>Payroll acima do esperado eleva apetite a risco em mercados emergentes. Real lidera ganhos no dia.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Crédito</span></div>
-        </div>
-        <div class="news-meta">Hoje · 09h45 · Valor</div>
-        <h3>Mercado de <em>CRI</em> bate recorde no primeiro trimestre</h3>
-        <p>Volume estruturado supera R$ 28 bi, com forte demanda de family offices e ALMs.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Agro</span></div>
-        </div>
-        <div class="news-meta">Ontem · 17h22 · Globo Rural</div>
-        <h3>Safra recorde puxa emissão de <em>CRA</em> em janeiro</h3>
-        <p>Operações vinculadas a soja e milho lideram o pipeline. Custeio safra atinge R$ 12 bi no mês.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Mercado de Capitais</span></div>
-        </div>
-        <div class="news-meta">Ontem · 15h08 · Anbima</div>
-        <h3><em>FIDC</em> ultrapassa R$ 500 bi em estoque</h3>
-        <p>Indústria de fundos de direitos creditórios cresce 14% no ano. Novas emissões aceleram em janeiro.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1604754742629-3e5728249d73?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Cross-Border</span></div>
-        </div>
-        <div class="news-meta">Ontem · 11h54 · Reuters</div>
-        <h3>Captação externa de <em>middle market</em> brasileiro cresce 32%</h3>
-        <p>Tickets entre USD 50 mi e USD 200 mi puxam ciclo. Hedge cambial estruturado vira commodity de mesa.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Regulatório</span></div>
-        </div>
-        <div class="news-meta">2 dias · 18h00 · CVM</div>
-        <h3>CVM publica nova resolução sobre <em>ofertas restritas</em></h3>
-        <p>Mudança simplifica documentação e amplia público-alvo qualificado. Securitizadoras celebram.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Crédito</span></div>
-        </div>
-        <div class="news-meta">2 dias · 14h33 · BC</div>
-        <h3>Home Equity cresce <em>28%</em> em 2025</h3>
-        <p>Volume originado supera R$ 18 bi. Liquidez sobre patrimônio imobiliário ganha tração entre PJs do interior.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Macro</span></div>
-        </div>
-        <div class="news-meta">3 dias · 10h12 · IBGE</div>
-        <h3>IPCA fica <em>abaixo</em> do piso da meta</h3>
-        <p>Inflação cede e abre espaço para reprecificação do CDI futuro. Curva de juros DI ajusta -25bps.</p>
-      </a>
-
-      <a href="#" class="news-card small">
-        <div class="news-img-wrap small">
-          <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&q=85');"></div>
-          <div class="news-badges"><span class="news-badge">Mercado de Capitais</span></div>
-        </div>
-        <div class="news-meta">3 dias · 08h47 · B3</div>
-        <h3>B3 anuncia novo segmento para <em>ofertas estruturadas</em></h3>
-        <p>Plataforma para FIDCs, CRIs e CRAs com listagem ágil e padrão de disclosure simplificado para investidor qualificado.</p>
-      </a>
-
-    </div>
-
-    <div class="news-loadmore">
-      <button class="news-loadmore-btn">Carregar mais notícias →</button>
-    </div>
+    <div class="news-page-grid" id="news-grid"></div>
+    <div id="news-status"></div>
   </div>
 </section>
 
@@ -441,5 +341,6 @@
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
 </a>
 <script src="shared.js"></script>
+<script src="news.js"></script>
 </body>
 </html>
